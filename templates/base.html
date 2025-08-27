@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Campus Events{% endblock %}</title>
+
+  <!-- Bootstrap 5 + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="/static/app.css" rel="stylesheet">
+  {% block head %}{% endblock %}
+
+  <style>
+    /* Footer har doim pastda turishi uchun */
+    html, body {
+      height: 100%;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+    main {
+      flex: 1 0 auto;
+    }
+    footer {
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'events:public_list' %}">
+      <i class="bi bi-activity me-2"></i>Campus Events
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nv">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="nv" class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'events:public_list' %}"><i class="bi bi-view-list"></i> Eventlar</a></li>
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'events:my_events' %}"><i class="bi bi-ticket-perforated"></i> Mening eventlarim</a></li>
+        {% endif %}
+        {% if user.is_staff %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'events:create' %}"><i class="bi bi-plus-circle"></i> Event yaratish</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'attendance:scan_page' %}"><i class="bi bi-upc-scan"></i> Scan</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'attendance:report' %}"><i class="bi bi-clipboard-data"></i> Hisobot</a></li>
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:profile' %}">
+              <i class="bi bi-person-badge"></i> Profil
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-light btn-sm ms-2" href="{% url 'users:logout' %}">
+              <i class="bi bi-box-arrow-right"></i> Chiqish
+            </a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="btn btn-light btn-sm" href="{% url 'users:login' %}">
+              <i class="bi bi-box-arrow-in-right"></i> Kirish
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container py-4">
+  {% if messages %}
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      {% for m in messages %}
+        <div class="toast align-items-center text-bg-{{ m.tags|default:'primary' }} border-0 show mb-2" role="alert">
+          <div class="d-flex">
+            <div class="toast-body">{{ m }}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="border-top py-3 mt-auto bg-white">
+  <div class="container small text-muted d-flex justify-content-between">
+    <span>© {{ now|date:"Y" }} Campus Events</span>
+    <span><i class="bi bi-shield-check"></i> QR-based attendance</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

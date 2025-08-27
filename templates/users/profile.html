@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Mening Profilim{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+        <!-- Header with gradient -->
+        <div class="bg-primary bg-gradient text-white text-center p-4">
+          {% if profile.photo_local %}
+            <img src="{{ profile.photo_local.url }}"
+                 class="rounded-circle border border-3 border-light mb-3"
+                 width="120" height="120" alt="Profil rasmi">
+          {% else %}
+            <i class="bi bi-person-circle" style="font-size: 6rem;"></i>
+          {% endif %}
+
+          <!-- Ism -->
+          <h3 class="mb-0">{{ request.user.first_name|default:request.user.username }}</h3>
+
+          <!-- Username -->
+          <h6 class="text-uppercase text-light mb-2">{{ request.user.username }}</h6>
+
+          <!-- Role -->
+          <small class="text-light">{{ profile.role|default:"Foydalanuvchi" }}</small>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body p-4">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span><i class="bi bi-envelope text-primary"></i> Email</span>
+              <span class="blurred secret-text">{{ profile.email|default:"-" }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span><i class="bi bi-phone text-success"></i> Telefon</span>
+              <span class="blurred secret-text">{{ profile.mobile|default:"-" }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span><i class="bi bi-card-text text-info"></i> ID</span>
+              <span class="blurred secret-text">{{ profile.emp_or_std_id|default:"-" }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span><i class="bi bi-people text-warning"></i> Foydalanuvchi turi</span>
+              <span class="blurred secret-text">{{ profile.usertype|default:"-" }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span><i class="bi bi-shield-lock text-danger"></i> Rol</span>
+              <span class="blurred secret-text">{{ profile.role|default:"-" }} ({{ profile.role_short|default:"-" }})</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Footer -->
+        <div class="card-footer text-center bg-light">
+          <a href="{% url 'users:logout' %}" class="btn btn-outline-danger btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Chiqish
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.blurred {
+  filter: blur(6px);
+  cursor: pointer;
+  user-select: none;
+  transition: filter 0.3s ease;
+}
+.blurred.revealed {
+  filter: none;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const secrets = document.querySelectorAll(".secret-text");
+
+  secrets.forEach(el => {
+    el.addEventListener("click", function() {
+      el.classList.add("revealed");
+
+      // 5 sekunddan keyin yana blur bo‘lsin
+      setTimeout(() => {
+        el.classList.remove("revealed");
+      }, 5000);
+    });
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Kirish{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h3 class="mb-3"><i class="bi bi-box-arrow-in-right"></i> Kirish</h3>
+        <p class="text-muted mb-4">Universitet hisobingiz bilan tizimga kiring.</p>
+
+        <form method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input name="username" class="form-control" required>
+              <div class="invalid-feedback">Username kiriting</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Parol</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input name="password" type="password" class="form-control" required>
+              <div class="invalid-feedback">Parol kiriting</div>
+            </div>
+          </div>
+          <button class="btn btn-primary w-100"><i class="bi bi-door-open"></i> Kirish</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(()=>{const f=document.querySelector('.needs-validation');f&&f.addEventListener('submit',e=>{if(!f.checkValidity()){e.preventDefault();e.stopPropagation()}f.classList.add('was-validated')});})();
+</script>
+{% endblock %}

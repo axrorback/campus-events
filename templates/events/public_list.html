@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Eventlar{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-3">
+  <h3 class="mb-0"><i class="bi bi-megaphone"></i> Active eventlar</h3>
+  <span class="text-muted small">Login talab qilinmaydi</span>
+</div>
+
+<div class="row g-3">
+  {% for e in active_events %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card event-card shadow-sm h-100">
+        {% if e.image %}<img class="card-img-top" src="{{ e.image.url }}" alt="">{% endif %}
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title mb-1"><a class="link-underline link-underline-opacity-0" href="{% url 'events:detail' e.pk %}">{{ e.title }}</a></h5>
+          <p class="text-muted small mb-2"><i class="bi bi-person-circle"></i> {{ e.published_by }}</p>
+          <ul class="list-unstyled small mb-3">
+            <li><i class="bi bi-geo-alt"></i> {{ e.location }} {% if e.room %} <span class="text-muted">({{ e.room }})</span>{% endif %}</li>
+            <li><i class="bi bi-calendar-event"></i> {{ e.start_at }} — {{ e.end_at }}</li>
+          </ul>
+          <div class="mt-auto d-flex justify-content-between align-items-center">
+            <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="bi bi-people"></i> {{ e.registered_count }}</span>
+            <a class="btn btn-primary btn-sm" href="{% url 'events:detail' e.pk %}"><i class="bi bi-ticket-perforated"></i> Batafsil</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12"><div class="alert alert-warning">Hozircha active event yo‘q</div></div>
+  {% endfor %}
+</div>
+
+<hr class="my-4">
+
+<h3 class="mb-3"><i class="bi bi-archive"></i> Eski eventlar</h3>
+<div class="row g-3">
+  {% for e in old_events %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title mb-1">{{ e.title }}</h5>
+          <ul class="list-unstyled small mb-3">
+            <li><i class="bi bi-geo-alt"></i> {{ e.location }} {% if e.room %} <span class="text-muted">({{ e.room }})</span>{% endif %}</li>
+            <li><i class="bi bi-calendar2-check"></i> {{ e.start_at }} — {{ e.end_at }}</li>
+          </ul>
+          <div class="mt-auto">
+            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle"><i class="bi bi-check2-circle"></i> Attended: {{ e.attended_count }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12"><div class="alert alert-info">Eski eventlar yo‘q</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

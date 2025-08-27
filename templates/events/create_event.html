@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Yangi Event{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0"><i class="bi bi-calendar-plus"></i> Yangi Event qo‘shish</h5>
+  </div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Sarlavha</label>
+        {{ form.title }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Tavsif</label>
+        {{ form.description }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Rasm</label>
+        {{ form.image }}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Boshlanish</label>
+          {{ form.start_at }}
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Tugash</label>
+          {{ form.end_at }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Joylashuv</label>
+        {{ form.location }}
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Xona</label>
+        {{ form.room }}
+      </div>
+
+      <div class="form-check mb-3">
+        {{ form.is_active }}
+        <label class="form-check-label">Faol</label>
+      </div>
+
+      <button type="submit" class="btn btn-success">
+        <i class="bi bi-check-circle"></i> Saqlash
+      </button>
+      <a href="{% url 'events:public_list' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Bekor qilish
+      </a>
+    </form>
+  </div>
+</div>
+{% endblock %}

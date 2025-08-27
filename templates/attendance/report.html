@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Hisobot{% endblock %}
+{% block content %}
+<h3 class="mb-3"><i class="bi bi-clipboard-data"></i> Hisobot</h3>
+
+<form class="row g-2 align-items-end mb-3" method="get">
+  <div class="col-md-6">
+    <label class="form-label">Event tanlang</label>
+    <select name="event" class="form-select" onchange="this.form.submit()">
+      <option value="">— Barchasi —</option>
+      {% for e in events %}
+        <option value="{{ e.id }}" {% if request.GET.event|default:'' == e.id|stringformat:"s" %}selected{% endif %}>
+          {{ e.title }} ({{ e.start_at|date:"Y-m-d H:i" }})
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-6 text-end">
+    <a class="btn btn-outline-secondary" href="?"><i class="bi bi-x-circle"></i> Filterni tozalash</a>
+  </div>
+</form>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Event</th>
+        <th>Foydalanuvchi</th>
+        <th>Email</th>
+        <th>Attended</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in regs %}
+        <tr>
+          <td class="small">{{ r.event.title }}</td>
+          <td>{{ r.user.first_name|default:r.user.username }}</td>
+          <td class="text-muted small">{{ r.user.email }}</td>
+          <td>
+            <span class="badge {% if r.attended %}text-bg-success{% else %}text-bg-secondary{% endif %}">
+              {% if r.attended %}Ha{% else %}Yo‘q{% endif %}
+            </span>
+          </td>
+          <td class="small text-muted">{{ r.attended_at|default:"—" }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-4">Ma'lumot yo‘q</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

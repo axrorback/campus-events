@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📸 Event Attendance Scanner</h2>
+    <div class="row">
+        <!-- Kamera oynasi -->
+        <div class="col-md-6">
+            <div id="preview" class="w-100 border rounded bg-dark" style="height:400px;"></div>
+        </div>
+
+        <!-- Natijalar jadvali -->
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5>✅ Qatnashuvchilar ro‘yxati</h5>
+                <button id="clearBtn" class="btn btn-sm btn-danger">🧹 Tozalash</button>
+            </div>
+            <div id="statusMsg" class="mb-2 text-danger fw-bold"></div>
+            <table class="table table-bordered table-striped" id="resultsTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Ism</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Vaqt</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- QR Code kutubxona -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script>
+    const resultsBody = document.getElementById("resultsBody");
+    const statusMsg = document.getElementById("statusMsg");
+
+    // Jadvalni yangilash
+    function renderRegistrations(users) {
+        resultsBody.innerHTML = "";
+        users.forEach(u => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${u.name}</td>
+                <td>${u.email}</td>
+                <td>${u.username}</td>
+                <td>${u.attended_at}</td>
+            `;
+            resultsBody.appendChild(row);
+        });
+    }
+
+    // DB dan qatnashchilarni olish
+    function fetchRegistrations() {
+        fetch("/attendance/attended_list/")
+            .then(res => res.json())
+            .then(data => renderRegistrations(data.users))
+            .catch(err => console.error(err));
+    }
+
+    // Clear tugmasi
+    document.getElementById("clearBtn").addEventListener("click", () => {
+        fetch("/attendance/clear_attendance/")
+            .then(res => res.json())
+            .then(() => fetchRegistrations());
+    });
+
+    // Har 2 soniyada yangilab turadi
+    setInterval(fetchRegistrations, 2000);
+    fetchRegistrations();
+
+    // QR kodni skan qilish
+    function onScanSuccess(decodedText, decodedResult) {
+        fetch(`/attendance/check_qr/?code=${decodedText}`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    statusMsg.innerText = data.message; // alert emas, statusda chiqadi
+                    setTimeout(() => statusMsg.innerText = "", 3000); // 3s dan keyin o‘chadi
+                }
+                // success=true bo‘lsa, jadval avtomatik 2s ichida yangilanadi
+            });
+    }
+
+    const html5QrCode = new Html5Qrcode("preview");
+    Html5Qrcode.getCameras().then(cameras => {
+        if (cameras && cameras.length) {
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: 250 },
+                onScanSuccess
+            );
+        } else {
+            alert("Kamera topilmadi!");
+        }
+    }).catch(err => console.error(err));
+</script>
+{% endblock %}

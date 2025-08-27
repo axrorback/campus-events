@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Ro‘yxat ma'lumotlari{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h4 class="mb-3"><i class="bi bi-person-vcard"></i> Foydalanuvchi</h4>
+        {% if photo %}
+          <img src="{{ photo }}" class="rounded mb-3 shadow-sm" style="max-width: 160px;">
+        {% endif %}
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><i class="bi bi-person"></i> <strong>Ism:</strong> {{ user_fullname }}</li>
+          <li class="list-group-item"><i class="bi bi-envelope"></i> <strong>Email:</strong> {{ email|default:"-" }}</li>
+          <li class="list-group-item"><i class="bi bi-telephone"></i> <strong>Telefon:</strong> {{ mobile|default:"-" }}</li>
+          <li class="list-group-item"><i class="bi bi-award"></i> <strong>Role:</strong> {{ role|default:"-" }}</li>
+          <li class="list-group-item"><i class="bi bi-hash"></i> <strong>ID:</strong> {{ emp_or_std_id|default:"-" }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body d-flex flex-column">
+        <h4 class="mb-3"><i class="bi bi-calendar2-event"></i> Tadbir</h4>
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item"><i class="bi bi-bullseye"></i> <strong>{{ event.title }}</strong></li>
+          <li class="list-group-item"><i class="bi bi-geo-alt"></i> {{ event.location }} {% if event.room %} ({{ event.room }}){% endif %}</li>
+          <li class="list-group-item"><i class="bi bi-clock-history"></i> {{ event.start_at }} — {{ event.end_at }}</li>
+          <li class="list-group-item"><i class="bi bi-check2-square"></i> Attended: <span class="badge {% if registration.attended %}text-bg-success{% else %}text-bg-secondary{% endif %}">
+            {% if registration.attended %}Ha{% else %}Yo‘q{% endif %}</span>
+            {% if registration.attended_at %}<span class="ms-2 text-muted small">({{ registration.attended_at }})</span>{% endif %}
+          </li>
+        </ul>
+
+        <div class="mt-auto d-flex gap-2">
+          {% if not registration.attended %}
+            <a href="{% url 'attendance:mark' registration.id %}" class="btn btn-success">
+              <i class="bi bi-person-check"></i> Qatnashdi deb belgilash
+            </a>
+          {% endif %}
+          <a href="{% url 'attendance:scan_page' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Orqaga</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
