@@ -67,7 +67,7 @@ def register_event(request, pk):
         os.makedirs(os.path.dirname(inv_path), exist_ok=True)
         with open(inv_path, 'wb') as f:
             f.write(invite_png)
-        reg.invitation_image.name = f'invites/{reg.id}.png'
+        reg.invitation_image.name = f'invites/{user_fullname}.png'
         reg.save()
 
     messages.success(request, "Ro'yxatdan o'tdingiz! Taklifnomangiz tayyor.")

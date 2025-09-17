@@ -2,9 +2,10 @@ from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = 'django-insecure-suc8(_#adjh*#+73sdl@fw=(^h-^i8+8xzs6x#(xv8gd1l1%ws'
-DEBUG = True
+from dotenv import load_dotenv
+load_dotenv()
+SECRET_KEY = os.getenv('SECRET')
+DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
