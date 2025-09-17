@@ -1,5 +1,58 @@
-.idea
+# 👉 Python umumiy
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 👉 Virtual environment
+venv/
+env/
+.venv/
+
+# 👉 Django maxsus
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 👉 Media va statik fayllar
+media/
+staticfiles/
+
+# 👉 Django migrations (faqat boshlang‘ich bosqichda istasang)
+*/migrations/*
+!*/migrations/__init__.py
+
+# 👉 SQLite bazasi
 db.sqlite3
-media
-migrations
+
+# 👉 IDE fayllar
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 👉 Sirli fayllar
 .env
+*.key
+*.pem
+
+# 👉 OS tomonidan yaratiladigan
+.DS_Store
+Thumbs.db
+
+# 👉 Coverage / test
+htmlcov/
+.tox/
+.coverage
+coverage.xml
+*.cover
+*.py,cover
+.pytest_cache/
+
+# 👉 Build / packaging
+*.egg-info/
+dist/
+build/
+.eggs/
